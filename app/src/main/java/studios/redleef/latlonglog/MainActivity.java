@@ -33,6 +33,10 @@ public class MainActivity extends Activity implements LocationListener {
     int numGps;
     long lastUpdate;
 
+    //Temp Storage
+    double lastLatitude;
+    double lastLongitude;
+
     //ListView ArrayAdapters and ArrayList
     LatLongListAdapter mAdapter;
     ArrayList<LatLongObject> latLongList;
@@ -59,8 +63,10 @@ public class MainActivity extends Activity implements LocationListener {
         //Initialize ArrayList
         latLongList = new ArrayList<LatLongObject>();
         latLongList.add(new LatLongObject(8347.37, 983.948));
-        //Populate Data
+        //TODO Populate Data
         //loadData();
+
+        //TODO Cut data short to 3 for main page list
 
         //LatLong List Initialization
         ListView latLongListView = (ListView)findViewById(R.id.latLongListView);
@@ -72,12 +78,21 @@ public class MainActivity extends Activity implements LocationListener {
         addButton.setOnClickListener(new View.OnClickListener() {
             // Start new list activity
             public void onClick(View v) {
-                latLongList.add(new LatLongObject(8347.37, 983.948));
-                mAdapter.notifyDataSetChanged();
+                addLogItem();
             }
         });
+
+        //TODO Add Switch Listener for Switch GPS on off
+
         //GPS Initializations
         InitializeLocationManager();
+    }
+
+    public void addLogItem()
+    {
+        //TODO Add Checks for last update is recent if so, then add
+        latLongList.add(new LatLongObject(lastLatitude, lastLongitude));
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -112,17 +127,10 @@ public class MainActivity extends Activity implements LocationListener {
         currentLocation = location;
         if(currentLocation != null)
         {
-            /*
-            if(currentLocation.getProvider() == LocationManager.GPS_PROVIDER)
-            {
-                gpsLatitude2.setText(String.valueOf(currentLocation.getLatitude()));
-                gpsLongitude2.setText(String.valueOf(currentLocation.getLongitude()));
-                gpsSpeed2.setText(String.valueOf(currentLocation.getSpeed()));
-                gpsAccuracy2.setText(String.valueOf(currentLocation.getAccuracy() + " Meters"));
-            }
-            */
             gpsLatitude2.setText(String.valueOf(currentLocation.getLatitude()));
+            lastLatitude = currentLocation.getLatitude();
             gpsLongitude2.setText(String.valueOf(currentLocation.getLongitude()));
+            lastLongitude = currentLocation.getLongitude();
             gpsSpeed2.setText(String.valueOf(currentLocation.getSpeed()));
             gpsAccuracy2.setText(String.valueOf(currentLocation.getAccuracy() + " Meters"));
 

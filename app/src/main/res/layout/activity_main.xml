@@ -13,14 +13,33 @@
         android:layout_width="fill_parent"
         android:layout_weight="1"
         android:layout_height="0dp">
-        <TextView
-            android:text="GPS Tracking"
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_margin="10dp"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:fontFamily="sans-serif-light"
-            android:textSize="17dp" />
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:text="GPS Tracking"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:fontFamily="sans-serif-light"
+                android:textSize="17dp" />
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="GPS"
+                android:id="@+id/gpsSwitch"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
         <LinearLayout
             android:orientation="horizontal"
             android:minWidth="25px"
@@ -243,7 +262,6 @@
             android:minWidth="25px"
             android:minHeight="25px"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_width="match_parent" >
             <ListView
                 android:layout_width="match_parent"

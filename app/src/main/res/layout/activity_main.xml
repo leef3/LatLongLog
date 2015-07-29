@@ -204,7 +204,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/pinicon"
-            android:id="@+id/imageView"
+            android:id="@+id/addLog"
             android:layout_gravity="right" />
     </LinearLayout>
 
@@ -248,7 +248,7 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/listView"
+                android:id="@+id/latLongListView"
                 android:layout_gravity="center_horizontal" />
 
 

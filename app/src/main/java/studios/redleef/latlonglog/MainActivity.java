@@ -9,8 +9,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -26,13 +31,18 @@ public class MainActivity extends Activity implements LocationListener {
 
     //Timers and Counters
     int numGps;
-    Date start;
+    long lastUpdate;
+
+    //ListView ArrayAdapters and ArrayList
+    LatLongListAdapter mAdapter;
+    ArrayList<LatLongObject> latLongList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //UI Element Initializations
         gpsStatus2 = (TextView)findViewById(R.id.gpsStatus2);
         gpsAccuracy2 = (TextView)findViewById(R.id.gpsAccuracy2);
         gpsLatitude2 = (TextView)findViewById(R.id.gpsLatitude2);
@@ -46,7 +56,27 @@ public class MainActivity extends Activity implements LocationListener {
         numGps = 0;
         gpsCount2.setText(String.valueOf(numGps));
 
+        //Initialize ArrayList
+        latLongList = new ArrayList<LatLongObject>();
+        latLongList.add(new LatLongObject(8347.37, 983.948));
+        //Populate Data
+        //loadData();
 
+        //LatLong List Initialization
+        ListView latLongListView = (ListView)findViewById(R.id.latLongListView);
+        mAdapter = new LatLongListAdapter(this, latLongList);
+        latLongListView.setAdapter(mAdapter);
+
+        //Add LatLong button intialization
+        ImageView addButton = (ImageView)findViewById(R.id.addLog);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            // Start new list activity
+            public void onClick(View v) {
+                latLongList.add(new LatLongObject(8347.37, 983.948));
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        //GPS Initializations
         InitializeLocationManager();
     }
 
@@ -99,10 +129,14 @@ public class MainActivity extends Activity implements LocationListener {
             if(numGps == 0)
             {
                 //First Contact
+                gpsContact2.setText(String.valueOf(System.currentTimeMillis()));
+                gpsLastUpdate2.setText(String.valueOf(System.currentTimeMillis()));
+                lastUpdate = System.currentTimeMillis();
             }
             else
             {
-                //Last Update
+                gpsLastUpdate2.setText(String.valueOf(System.currentTimeMillis()));
+                lastUpdate = System.currentTimeMillis();
             }
 
             ++numGps;
@@ -124,8 +158,6 @@ public class MainActivity extends Activity implements LocationListener {
             gpsStatus2.setText(String.valueOf(status));
         }
     }
-    //=================================TIMER ===============================
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -61,7 +61,8 @@
                 android:id="@+id/latitudeListItem"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:background="#E0F7FA" />
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="1dp"
@@ -78,7 +79,8 @@
                 android:id="@+id/longitudeListItem"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:background="#E0F7FA" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

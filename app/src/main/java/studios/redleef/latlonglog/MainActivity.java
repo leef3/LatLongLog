@@ -1,6 +1,8 @@
 package studios.redleef.latlonglog;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -41,10 +43,15 @@ public class MainActivity extends Activity implements LocationListener {
     LatLongListAdapter mAdapter;
     ArrayList<LatLongObject> latLongList;
 
+    //Context
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        context = this;
 
         //UI Element Initializations
         gpsStatus2 = (TextView)findViewById(R.id.gpsStatus2);
@@ -79,6 +86,15 @@ public class MainActivity extends Activity implements LocationListener {
             // Start new list activity
             public void onClick(View v) {
                 addLogItem();
+            }
+        });
+
+        TextView seeAll = (TextView)findViewById(R.id.seeAllTextView);
+        seeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FullList.class);
+                startActivity(intent);
             }
         });
 

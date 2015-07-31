@@ -54,7 +54,6 @@ public class FullList extends Activity {
         fullList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
                 latLongList.remove(position);
-                latLongList.clear();
                 mAdapter.notifyDataSetChanged();
                 saveData();
                 return true;

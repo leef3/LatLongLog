@@ -36,7 +36,9 @@
                 android:layout_height="wrap_content"
                 android:text="GPS"
                 android:id="@+id/gpsSwitch"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:enabled="false"
+                android:visibility="invisible" />
         </LinearLayout>
 
 

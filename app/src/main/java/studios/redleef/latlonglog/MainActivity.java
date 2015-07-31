@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 //For Data Save
@@ -27,6 +29,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -43,6 +47,7 @@ public class MainActivity extends Activity implements LocationListener {
     //Timers and Counters
     int numGps;
     long lastUpdate;
+    long firstContact;
 
     //Temp Storage
     double lastLatitude;
@@ -121,18 +126,28 @@ public class MainActivity extends Activity implements LocationListener {
     public void addLogItem()
     {
         //TODO Add Checks for last update is recent if so, then add
-        latLongList.add(new LatLongObject(lastLatitude, lastLongitude));
-        mAdapter.notifyDataSetChanged();
-        onlyThree();
-        saveData();
+        if(lastLatitude == 0 && lastLongitude == 0)
+        {
+            Toast.makeText(context, "Requires GPS Signal", Toast.LENGTH_SHORT).show();
+        }
+        else if(System.currentTimeMillis() - lastUpdate > 360000)
+        {
+            Toast.makeText(context, "Coordinates are outdated", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            latLongList.add(new LatLongObject(lastLatitude, lastLongitude));
+            mAdapter.notifyDataSetChanged();
+            onlyThree();
+            saveData();
+        }
     }
 
     public void onlyThree() {
-        tempLatLongList.clear();
-        tempLatLongList.add(latLongList.get(latLongList.size() - 1));
-        tempLatLongList.add(latLongList.get(latLongList.size() - 2));
-        tempLatLongList.add(latLongList.get(latLongList.size() - 3));
-
+            tempLatLongList.clear();
+            tempLatLongList.add(latLongList.get(latLongList.size() - 1));
+            tempLatLongList.add(latLongList.get(latLongList.size() - 2));
+            tempLatLongList.add(latLongList.get(latLongList.size() - 3));
     }
 
     private void loadData()
@@ -152,7 +167,19 @@ public class MainActivity extends Activity implements LocationListener {
                 latLongList.add(c);
             }
         }
-        onlyThree();
+        if(latLongList.size() > 3)
+        {
+            onlyThree();
+        }
+        else
+        {
+            tempLatLongList.clear();
+
+            for(int x = latLongList.size() - 1; x > -1; x--)
+            {
+                tempLatLongList.add(latLongList.get(x));
+            }
+        }
     }
 
     private void saveData()
@@ -195,6 +222,8 @@ public class MainActivity extends Activity implements LocationListener {
 
     public void onLocationChanged(Location location)
     {
+        gpsStatus2.setText("Enabled");
+
         currentLocation = location;
         if(currentLocation != null)
         {
@@ -205,18 +234,26 @@ public class MainActivity extends Activity implements LocationListener {
             gpsSpeed2.setText(String.valueOf(currentLocation.getSpeed()));
             gpsAccuracy2.setText(String.valueOf(currentLocation.getAccuracy() + " Meters"));
 
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String stringDate = df.format(c.getTime());
+
             if(numGps == 0)
             {
                 //First Contact
-                gpsContact2.setText(String.valueOf(System.currentTimeMillis()));
-                gpsLastUpdate2.setText(String.valueOf(System.currentTimeMillis()));
+
+                gpsContact2.setText(String.valueOf(stringDate));
+                gpsLastUpdate2.setText(String.valueOf(stringDate));
                 lastUpdate = System.currentTimeMillis();
+                firstContact = System.currentTimeMillis();
             }
             else
             {
-                gpsLastUpdate2.setText(String.valueOf(System.currentTimeMillis()));
+                gpsLastUpdate2.setText(String.valueOf(stringDate));
                 lastUpdate = System.currentTimeMillis();
             }
+
+            gpsTime2.setText(String.valueOf((System.currentTimeMillis() - firstContact) / 1000) + " s");
 
             ++numGps;
             gpsCount2.setText(String.valueOf(numGps));
@@ -224,11 +261,11 @@ public class MainActivity extends Activity implements LocationListener {
     }
     public void onProviderDisabled(String provider)
     {
-
+        gpsStatus2.setText("Disabled");
     }
     public void onProviderEnabled(String provider)
     {
-
+        gpsStatus2.setText("Enabled");
     }
     public void onStatusChanged(String provider, int status, Bundle extras )
     {

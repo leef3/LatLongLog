@@ -3,22 +3,31 @@ package studios.redleef.latlonglog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
+
+//For Data Save
+//GSON Serializable Data
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.List;
 
 
 public class MainActivity extends Activity implements LocationListener {
@@ -42,9 +51,14 @@ public class MainActivity extends Activity implements LocationListener {
     //ListView ArrayAdapters and ArrayList
     LatLongListAdapter mAdapter;
     ArrayList<LatLongObject> latLongList;
+    ArrayList<LatLongObject> tempLatLongList;
 
     //Context
     Context context;
+
+    //Data Storage
+    public static final String MASTER_SAVE_NAME = "MASTER_SAVE_DATA_LATLONG";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +83,15 @@ public class MainActivity extends Activity implements LocationListener {
 
         //Initialize ArrayList
         latLongList = new ArrayList<LatLongObject>();
-        latLongList.add(new LatLongObject(8347.37, 983.948));
-        //TODO Populate Data
-        //loadData();
+        tempLatLongList = new ArrayList<LatLongObject>();
+        //Populate Data
+        loadData();
+
 
         //TODO Cut data short to 3 for main page list
-
         //LatLong List Initialization
         ListView latLongListView = (ListView)findViewById(R.id.latLongListView);
-        mAdapter = new LatLongListAdapter(this, latLongList);
+        mAdapter = new LatLongListAdapter(this, tempLatLongList);
         latLongListView.setAdapter(mAdapter);
 
         //Add LatLong button intialization
@@ -109,6 +123,45 @@ public class MainActivity extends Activity implements LocationListener {
         //TODO Add Checks for last update is recent if so, then add
         latLongList.add(new LatLongObject(lastLatitude, lastLongitude));
         mAdapter.notifyDataSetChanged();
+        onlyThree();
+        saveData();
+    }
+
+    public void onlyThree() {
+        tempLatLongList.clear();
+        tempLatLongList.add(latLongList.get(latLongList.size() - 1));
+        tempLatLongList.add(latLongList.get(latLongList.size() - 2));
+        tempLatLongList.add(latLongList.get(latLongList.size() - 3));
+
+    }
+
+    private void loadData()
+    {
+        latLongList.clear();
+        SharedPreferences settings = context.getSharedPreferences("pref", 0);
+        settings = context.getSharedPreferences("pref", 0);
+        String objectData = settings.getString(MASTER_SAVE_NAME, "");
+        if (!objectData.equals("")) {
+            System.out.println("Object Data: " + objectData);
+            Gson gson = new Gson();
+            Type collectionType = new TypeToken<ArrayList<LatLongObject>>() {
+            }.getType();
+            JsonArray jArray = new JsonParser().parse(objectData).getAsJsonArray();
+            for (JsonElement e : jArray) {
+                LatLongObject c = gson.fromJson(e, LatLongObject.class);
+                latLongList.add(c);
+            }
+        }
+        onlyThree();
+    }
+
+    private void saveData()
+    {
+        SharedPreferences.Editor settings = context.getSharedPreferences("pref",0).edit();
+        String data = new Gson().toJson(latLongList);
+        System.out.println("Data!: " + data);
+        settings.putString(MASTER_SAVE_NAME, data);
+        settings.commit();
     }
 
     @Override
@@ -117,6 +170,8 @@ public class MainActivity extends Activity implements LocationListener {
         super.onResume();
         //GPS
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        loadData();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

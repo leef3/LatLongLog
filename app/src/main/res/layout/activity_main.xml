@@ -264,23 +264,20 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="See All"
-                    android:id="@+id/seeAllTextView"
-                    android:gravity="right" />
-
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/latLongListView"
                 android:layout_gravity="center_horizontal" />
 
-
-
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="See All"
+                android:id="@+id/seeAllTextView"
+                android:gravity="right"
+                android:paddingRight="10dp" />
 
 
         </LinearLayout>

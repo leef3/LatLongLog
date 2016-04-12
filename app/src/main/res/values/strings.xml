@@ -1,7 +1,14 @@
 <resources>
-    <string name="app_name">LatLongLog</string>
+    <string name="app_name">Lat Long Log</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_full_list">FullList</string>
+
+    <string name="Tutorial_Title_1">Quick GPS Data</string>
+    <string name="Tutorial_Description_1">See quick GPS details on your phone</string>
+
+    <string name="Tutorial_Title_2">Location Snapshot</string>
+    <string name="Tutorial_Description_2">Create GPS Snapshots on the device to record places visited</string>
+
 </resources>

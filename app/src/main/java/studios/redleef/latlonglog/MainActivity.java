@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -145,9 +148,17 @@ public class MainActivity extends Activity implements LocationListener {
 
     public void onlyThree() {
             tempLatLongList.clear();
-            tempLatLongList.add(latLongList.get(latLongList.size() - 1));
-            tempLatLongList.add(latLongList.get(latLongList.size() - 2));
-            tempLatLongList.add(latLongList.get(latLongList.size() - 3));
+
+            for(int x = 0; x < latLongList.size(); x++)
+            {
+                int size = latLongList.size();
+                tempLatLongList.add(latLongList.get(latLongList.size() - x - 1));
+
+                if(x == 3)
+                {
+                    break;
+                }
+            }
     }
 
     private void loadData()
@@ -196,7 +207,15 @@ public class MainActivity extends Activity implements LocationListener {
     {
         super.onResume();
         //GPS
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        try
+        {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+        catch (SecurityException e)
+        {
+
+        }
+
         loadData();
         mAdapter.notifyDataSetChanged();
     }
@@ -206,7 +225,14 @@ public class MainActivity extends Activity implements LocationListener {
     {
         super.onPause();
         //GPS
-        locationManager.removeUpdates(this);
+        try
+        {
+            locationManager.removeUpdates(this);
+        }
+        catch (SecurityException e)
+        {
+
+        }
     }
 
     //==================================GPS INTERFACE METHODS==============================

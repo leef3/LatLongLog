@@ -5,7 +5,7 @@ android {
     buildToolsVersion '23.0.1'
 
     defaultConfig {
-        applicationId "studios.redleef.latlonglog"
+        applicationId "studios.redleef.gps.snapshot"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 2

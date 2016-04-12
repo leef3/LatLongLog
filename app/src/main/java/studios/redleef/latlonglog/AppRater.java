@@ -15,7 +15,7 @@ import android.widget.TextView;
  */
 public class AppRater {
     private final static String APP_TITLE = "GPS Stream Logger";// App Name
-    private final static String APP_PNAME = "studios.redleef.latlonglog";// Package Name
+    private final static String APP_PNAME = "studio.redleef.gps.snapshot"; // Package Name
 
     private final static int DAYS_UNTIL_PROMPT = 15;//Min number of days
     private final static int LAUNCHES_UNTIL_PROMPT = 5;//Min number of launches
